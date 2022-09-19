@@ -12,7 +12,6 @@ const REG_NUMERIC = new RegExp(`^[0-9]+$`);
 const REG_NUMBER = new RegExp(`^[+-]{0,1}[0-9]{1,}[.]{0,1}[0-9]{0,}[e]{0,1}[+-]{0,1}[0-9]{0,}$`);
 const REG_ALPHA_NUMERIC = new RegExp(`^[a-zA-Z0-9]+$`);
 
-
 /**
  * For expecting a parameter type and returning a type error if it doesn't match.
  * @param {number} pnumber - The parameter number.
@@ -20,11 +19,13 @@ const REG_ALPHA_NUMERIC = new RegExp(`^[a-zA-Z0-9]+$`);
  * @param {string|array} ptype - The required type as a string or array of string types.
  * @param {function} func - The function name.
  * @param {array} rules - The rules for the value of the parameter. 
- * @returns 
+ * @returns {string} - Passes the param type. 
  */
-export function duct_tape(pnumber: number, param: unknown, ptype: string | string[], func: Function, rules: (string | object)[] = []) {
+export function duck_tape(pnumber: number, param: unknown, ptype: string | string[], func: Function, rules: (string | object)[] = []) {
 
+    // Get the param type
     const param_type = type_of(param);
+
     if (type_of(ptype) === 'string') ptype = [ptype as string];
 
     // Get the function as a string.
@@ -73,25 +74,25 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'REGEX':
 
                     const reg = new RegExp(value);
-                    if (reg.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nValue must match regex (${value})!`);
+                    if (reg.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nValue must match regex (${value})!`, rule);
 
                     break;
 
                 case 'ALPHA':
 
-                    if (!REG_ALPHA.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be alpha characters (a-zA-Z)!`);
+                    if (!REG_ALPHA.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be alpha characters (a-zA-Z)!`, rule);
 
                     break;
 
                 case 'NUMBER':
 
-                    if (!REG_NUMBER.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be a valid js number!`);
+                    if (!REG_NUMBER.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be a valid js number!`, rule);
 
                     break;
 
                 case 'NUMERIC':
 
-                    if (!REG_NUMERIC.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be a numeric characters (0-9)!`);
+                    if (!REG_NUMERIC.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be a numeric characters (0-9)!`, rule);
 
                     break;
 
@@ -99,7 +100,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'ALPHA_NUMERIC':
                 case 'ALPHA-NUMERIC':
 
-                    if (!REG_ALPHA_NUMERIC.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be alpha numeric characters (a-zA-Z0-9)!`);
+                    if (!REG_ALPHA_NUMERIC.test(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be alpha numeric characters (a-zA-Z0-9)!`, rule);
 
                     break;
 
@@ -107,7 +108,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'NOT_STRING_EMPTY':
                 case 'NOT-STRING-EMPTY':
 
-                    if ((<string>param).trim() === '') throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nCannot be string empty!`);
+                    if ((<string>param).trim() === '') throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nCannot be string empty!`, rule);
 
                     break;
 
@@ -115,7 +116,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'IN_LIST':
                 case 'IN-LIST':
 
-                    if (!value.includes(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be in allowed list (${JSON.stringify(value)})!`);
+                    if (!value.includes(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust be in allowed list (${JSON.stringify(value)})!`, rule);
 
                     break;
 
@@ -123,7 +124,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'NOT_IN_LIST':
                 case 'NOT-IN-LIST':
 
-                    if (value.includes(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust not be in list (${JSON.stringify(value)})!`);
+                    if (value.includes(param as string)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\nMust not be in list (${JSON.stringify(value)})!`, rule);
 
                     break;
 
@@ -131,7 +132,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'GREATER_THAN':
                 case 'GREATER-THAN':
 
-                    if ((param as number) < parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be greater than ${value})!`);
+                    if ((param as number) < parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be greater than ${value})!`, rule);
 
                     break;
 
@@ -139,7 +140,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'GREATER_THAN_EQUAL':
                 case 'GREATER-THAN-EQUAL':
 
-                    if ((param as number) < parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be greater than equal ${value})!`);
+                    if ((param as number) < parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be greater than equal ${value})!`, rule);
 
                     break;
 
@@ -147,7 +148,7 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'LESS_THAN':
                 case 'LESS-THAN':
 
-                    if ((param as number) > parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be less than ${value})!`);
+                    if ((param as number) > parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be less than ${value})!`, rule);
 
                     break;
 
@@ -155,14 +156,14 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
                 case 'LESS_THAN_EQUAL':
                 case 'LESS-THAN-EQUAL':
 
-                    if ((param as number) > parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be less than equal ${value})!`);
+                    if ((param as number) > parseInt(value)) throw new DuckTapeRuleError(`Incorrect ${pname} parameter value (Rule: ${rule})! in \n${fname}\n${param} must be less than equal ${value})!`, rule);
 
                     break;
 
                 // No rule found
                 default:
 
-                    throw new DuckTapeRuleError(`No expect rule found for (Missing Rule: ${rule})! in \n${fname}`);
+                    throw new DuckTapeRuleError(`No duck tape rule found for (Missing Rule: ${rule})! in \n${fname}`, rule);
 
                     break;
 
@@ -171,7 +172,6 @@ export function duct_tape(pnumber: number, param: unknown, ptype: string | strin
         }
 
     }
-
 
     // Return the parameter type for extra processing.
     return param_type;
