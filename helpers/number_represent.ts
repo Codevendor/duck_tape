@@ -6,11 +6,11 @@ const simple = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth'
 const deca = ['twent', 'thirt', 'fourt', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
 
 /**
- * Changes a number into it's stringify representation, first, second, third, etc. 
+ * Changes a number into it's stringified representation, first, second, third, etc. 
  * @param {number} src - The number 0 to 99.
  * @returns {string} - The stringified number.
  */
-export function number_represent(src: number) {
+export default function number_represent(src: number) {
 
     if (type_of(src) !== 'number') throw new TypeError(`Param (src) must be a number from 0 to 99!`);
     if (src < 0 || src > 99) throw new TypeError(`Param (src) must be a number from 0 to 99!`);

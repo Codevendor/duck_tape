@@ -14,7 +14,7 @@ Deno.test(`\n${TITLE} Testing duck_tape param ${RESET}`, () => {
 
   const func = function(name: string) {
 
-    const name_type = duck_tape(1, name, ['string'], func, ['NOT-STRING-EMPTY']);
+    const name_type = duck_tape(func, 1, name, ['string'], ['NOT-STRING-EMPTY']);
 
   };
 
